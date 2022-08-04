@@ -5,7 +5,7 @@ error:
 
 welcome: "<b>Hi, %name%, I'm Bob the bot.</b>\n
 \n
-If ypu want to play text quest use /play.\n
+If you want to play text quest use /play.\n
 If you want rest from the game use /exit"
 
 menu:
@@ -16,6 +16,18 @@ menu:
       continue: "Continue game"
     profile: "Profile"
     info: "Info"
+
+info:
+  author: "<b>Author: @mrflaxe</b>"
+  github: "GitHub open source code: https://github.com/Mrflaxe/IFTelegramBot"
+  head: "<b>Commands:</b>"
+  pattern: "%command% — %description%"
+  commands:
+    start: "start conversation with this bot"
+    profile: "interaction with own profile"
+    play: "start/continue the quest"
+    exit: "leave the game"
+    info: "show this message"
 
 achievement:
   obtained: "<b>You get achievement:</b>"
