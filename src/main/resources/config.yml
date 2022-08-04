@@ -1,0 +1,16 @@
+# coonection to MySQL server database
+database:
+  host: 127.0.0.1
+  port: 3306
+  name: database_name
+  user: root
+  password: password
+
+bot-token: "here-should-be-a-token"
+
+# user cooldown for sending messages 
+send-cooldown: 1
+
+# cooldown for sending quest messages
+# It's time while bot have 'typing' status befor he send a line
+message-cooldown: 3

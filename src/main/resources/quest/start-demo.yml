@@ -1,0 +1,64 @@
+start:
+  lines:
+    - "It's the start branch. All quests always will start from this."
+    - "Section 'lines' provide sequence of messages to send to a player. \n
+    Each line will be sended with cooldown settled in the <i>'config.yml'</i> file."
+    - "This is the last line of start branch. After this will be sended 
+    answer-option message where player will face a choice."
+
+  answer-options:
+    first:
+      text: "Realy?"
+      link: "first-1"
+    second: 
+      text: "I don't care."
+      link: "ending-bad"
+    third:
+      text: "Okay, continue."
+      link: "first-1"
+
+first-1:
+  lines:
+    - "So there is another branch now.\n
+    If you had chosen another option you was able to go to different branch."
+    - "In this way you can make a lot of branches and links to each other."
+    - "his makes it possible to create large branched stories."
+  answer-options:
+    first:
+      text: "That's cool man! Keep up the good work."
+      link: "gratitude"
+    second:
+      text: "Interesting."
+      link: "ending-good"
+
+gratitude:
+  lines:
+    - "Thanks for your support. I appreciate it."
+    - "In this branch you can see another section <i>'achievement'</i>."
+    - "This section means that player got to this branch will obtain this achievement. 
+    Text in the section is achievement identificator settled in <i>'achievements.yml'</i> config."
+    - "So, right after this last line player will get this achievement."
+  answer-options:
+    first:
+      text: "[Continue]"
+      link: "ending-good"
+  achievement: "good-tester"
+
+ending-bad:
+  lines:
+    - "So why are you still here?"
+    - "<b>You was banned</b>"
+    - "For unban write to the developer."
+  ending: true
+  achievement: "bad-tester"
+
+ending-good:
+  lines:
+    - "And that almost all what you need to know about this bot and this config."
+    - "As last thing you can see is <i>'ending'</i> section."
+    - "It's realy simple. This section means that current branch is 
+    the end branch and you can't go anywhere else from here.\n
+    <b>Dead end.</b>"
+    - "After this branch player will be returned to main menu where he can play again."
+    - "That's all."
+  ending: true
