@@ -1,6 +1,4 @@
 error:
-  button:
-    not-ready: "<b>This button not working yet :(</b>"
   unknown-command: "<b>I don't know this command :(</b>"
 
 welcome: "<b>Hi, %name%, I'm Bob the bot.</b>\n
@@ -42,4 +40,5 @@ wait: "<i>Wait some time before sending again.</i>"
 on-disable: "<b>Bot sleeping...</b>"
 
 quest:
-  answer-options-pattern: "<b>Answer options:</b>"
+  answer-options: 
+    head: "<b>Answer options:</b>"

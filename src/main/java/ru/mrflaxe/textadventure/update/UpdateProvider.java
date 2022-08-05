@@ -85,12 +85,16 @@ public class UpdateProvider implements UpdatesListener {
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> {
+            // Gets text of the message
             String textMessage = update.message().text();
+            // Gets id of the chat
             long chatID = update.message().chat().id();
             
+            // Gets user from provider
             User user = userProvider.getUser(chatID);
             
             // If it's new user save his data in cache
+            // And if he is new for database save there
             if(user == null) {
                 String name = update.message().chat().firstName();
                 user = new User(chatID, name, databaseManager);
@@ -102,6 +106,7 @@ public class UpdateProvider implements UpdatesListener {
                 }
             }
             
+            // If cooldown still going asks user to wait
             if(cooldown.isCooldown()) {
                 String message = messages.getString("wait", true);
                 
@@ -112,22 +117,32 @@ public class UpdateProvider implements UpdatesListener {
                 return;
             }
             
+            // Relaunches cooldown and handles the message
             cooldown.setCooldown();
             
+            // If user playing quest already
             if(questSessions.hasSession(user)) {
+                // If user tries to leave game
                 if(textMessage.equals("/exit")) {
+                    // Handling exit command
                     commandHandlers.get(textMessage).handle(update);
                     return;
                 }
                 
+                // In other cases the message can be or answer option or just some random text
+                // Anyway will handle it in quest handler
                 questSessions.handle(update.message(), user);
                 return;
             }
             
+            // If text is not null it can be a command
             if(textMessage != null) {
+                // If commandHandlers contains this message as a key so it's a command
+                // Will handle it
                 if(commandHandlers.containsKey(textMessage)) {
                     commandHandlers.get(textMessage).handle(update);
                     return;
+                // Otherwise will say user that bot doesn't know such command
                 } else {
                     unknownCommandHandler.handle(update);
                     return;
@@ -138,22 +153,28 @@ public class UpdateProvider implements UpdatesListener {
         return CONFIRMED_UPDATES_ALL;
     }
     
+    /**
+     * Returns user to bot main menu
+     * @param user - whom to return
+     */
     public void returnToMainMenu(User user) {
         String message = messages.getString("menu.message", true);
         long chatID = user.getChatID();
         
-        // Saving new profile to database
-        ProfileModel profile = databaseManager.getProfile(chatID);
+        ProfileModel profile = user.getUserProfile();
         
         boolean userHasSave = databaseManager.hasQuestSave(profile);
         String playButton;
         
+        // If user has save showing one button
+        // If not showing another. Simple
         if(!userHasSave) {
             playButton = this.playButton;
         } else {
             playButton = this.continueButton;
         }
 
+        // Creating new replyKeyboard with menu buttons
         Keyboard replKeyboardMarkup = new ReplyKeyboardMarkup(
                 new KeyboardButton[]{
                         new KeyboardButton(playButton)
@@ -162,6 +183,7 @@ public class UpdateProvider implements UpdatesListener {
                         new KeyboardButton(infoButton)
                 }).resizeKeyboard(true);
         
+        // Sending message and keyboard
         SendMessage request = new SendMessage(chatID, message).replyMarkup(replKeyboardMarkup);
         request.parseMode(ParseMode.HTML);
         
@@ -174,12 +196,14 @@ public class UpdateProvider implements UpdatesListener {
         this.playButton = messages.getString("menu.keyboard.play.start", true);
         this.continueButton = messages.getString("menu.keyboard.play.continue", true);
         
-        addAlternativeCommandHandler(profileButton, "/achievement");
-        addAlternativeCommandHandler(infoButton, "/info");
-        addAlternativeCommandHandler(playButton, "/play");
-        addAlternativeCommandHandler(continueButton, "/play");
+        // Adds alternative triggers for keyboard buttons
+        addAlternativeCommandTrigger(profileButton, "/achievement");
+        addAlternativeCommandTrigger(infoButton, "/info");
+        addAlternativeCommandTrigger(playButton, "/play");
+        addAlternativeCommandTrigger(continueButton, "/play");
     }
     
+    // links handlers with command triggers
     private void initializeHandlers() {
         commandHandlers.put("/achievement", new AchievementHandler(telegramBot, messages, this, databaseManager));
         commandHandlers.put("/info", new InfoHandler(telegramBot, messages, this));
@@ -188,7 +212,12 @@ public class UpdateProvider implements UpdatesListener {
         commandHandlers.put("/exit", new ExitHandler(telegramBot, messages, this, questSessions, userProvider));
     }
     
-    public void addAlternativeCommandHandler(String alternative, String existing) {
+    /**
+     * Adds alternative command trigger for existing command
+     * @param alternative - alternative command
+     * @param existing - existing command to link with alternate
+     */
+    public void addAlternativeCommandTrigger(String alternative, String existing) {
         MessageHandler handler = commandHandlers.get(existing);
         commandHandlers.put(alternative, handler);
     }

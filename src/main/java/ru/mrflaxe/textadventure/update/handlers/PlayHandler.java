@@ -32,10 +32,12 @@ public class PlayHandler extends MessageHandler {
         long chatID = update.message().chat().id();
         User user = userProvider.getUser(chatID);
         
+        // If user already plays
         if(questSessions.hasSession(user)) {
             return;
         }
         
+        // Starts game
         questSessions.openSession(user);
     }
 

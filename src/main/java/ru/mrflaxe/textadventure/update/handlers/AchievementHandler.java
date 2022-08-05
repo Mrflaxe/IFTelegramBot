@@ -43,6 +43,7 @@ public class AchievementHandler extends MessageHandler {
         bot.execute(request);
     }
     
+    // I'm too lazy to comment this
     private String buildMessage(List<Achievement> achievements) {
         String head = messages.getString("achievement.list.head", true);
         

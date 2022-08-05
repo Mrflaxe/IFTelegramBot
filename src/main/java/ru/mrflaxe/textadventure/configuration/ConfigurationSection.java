@@ -23,9 +23,11 @@ public class ConfigurationSection {
     private final Path filePath;
     
     @Getter
+    // Path to this section from main section
     private final String sectionPath;
     
     @Getter
+    // Name of this section
     private final String name;
     
     private final Object containedData;
@@ -73,6 +75,11 @@ public class ConfigurationSection {
         return subsection.getSection(sectionPath.replaceFirst(sections[0], "").replaceFirst(".", ""), sneakyThrows);
     }
     
+    /**
+     * Checks if this section contains given subsection
+     * @param sectionPath - path to subsection
+     * @return true if contains otherwise false
+     */
     public boolean containsSection(String sectionPath) {
         return getSection(sectionPath, true) == null ? false : true;
     }
@@ -103,10 +110,19 @@ public class ConfigurationSection {
         return content;
     }
     
+    /**
+     * Gets int value from current section
+     * @return int value
+     */
     public int getInt() {
         return getInt("");
     }
     
+    /**
+     * Gets int value from given section
+     * @param sectionPath - section contains value
+     * @return int value
+     */
     public int getInt(String sectionPath) {
         
         // If sectionPath param is empty just return a contained value if exist
@@ -133,6 +149,18 @@ public class ConfigurationSection {
         return getString("", specialSymbolsFormatting);
     }
     
+    /**
+     * Gets string value from given section. <br>
+     * If specialSymbolsFormatting is true gotten string will be formatted for html parsing.
+     * For example if user writes: <br>
+     * "{@code <b><foo>&bar</b>}" <br>
+     * this method will return: <br>
+     * "{@code <b>&lt;foo&gt;&#38;bar</b>}" <br>
+     * 
+     * @param section - section contains value
+     * @param specialSymbolsFormatting
+     * @return formatted string value
+     */
     public String getString(String sectionPath, boolean specialSymbolsFormatting) {
         if(sectionPath.isEmpty()) {
             try {
@@ -157,14 +185,41 @@ public class ConfigurationSection {
         return subsection.getString(specialSymbolsFormatting);
     }
     
+    /**
+     * Gets string value from given section. <br>
+     * @param sectionPath
+     * @return string value from given section
+     */
     public String getString(String sectionPath) {
         return getString(sectionPath, false);
     }
     
+    /**
+     * Gets list of string value from current section. <br>
+     * If specialSymbolsFormatting is true gotten string will be formatted for html parsing.
+     * For example if user writes: <br>
+     * "{@code <b><foo>&bar</b>}" <br>
+     * this method will return next string: <br>
+     * "{@code <b>&lt;foo&gt;&#38;bar</b>}" <br>
+     * @param specialSymbolsFormatting
+     * @return list of string from given section
+     */
     public List<String> getStringList(boolean specialSymbolsFormatting) {
         return getStringList("", specialSymbolsFormatting);
     }
     
+    /**
+     * Gets list of string value from given section. <br>
+     * If specialSymbolsFormatting is true gotten string will be formatted for html parsing.
+     * For example if user writes: <br>
+     * "{@code <b><foo>&bar</b>}" <br>
+     * this method will return next string: <br>
+     * "{@code <b>&lt;foo&gt;&#38;bar</b>}" <br>
+     * 
+     * @param section - section contains value
+     * @param specialSymbolsFormatting
+     * @return list of string from given section
+     */
     @SuppressWarnings("unchecked")
     public List<String> getStringList(String sectionPath, boolean specialSymbolsFormatting) {
         if(sectionPath.isEmpty()) {
@@ -197,14 +252,28 @@ public class ConfigurationSection {
         return subsection.getStringList(specialSymbolsFormatting);
     }
     
+    /**
+     * Gets list of string value from current section.
+     * @param sectionPath
+     * @return list of string from given section
+     */
     public List<String> getStringList(String sectionPath) {
         return getStringList(sectionPath, false);
     }
     
+    /**
+     * Gets boolean value from current section
+     * @return boolean value contained in given section
+     */
     public boolean getBoolean() {
         return getBoolean("");
     }
     
+    /**
+     * Gets boolean value from given section
+     * @param section - section contains value
+     * @return boolean value contained in given section
+     */
     public boolean getBoolean(String sectionPath) {
         if(sectionPath.isEmpty()) {
             try {
