@@ -44,17 +44,17 @@ public class AchievementHandler extends MessageHandler {
     }
     
     private String buildMessage(List<Achievement> achievements) {
-        String head = messages.getString("achievement.list.head");
+        String head = messages.getString("achievement.list.head", true);
         
         if(achievements == null || achievements.isEmpty()) {
-            String emptyAchievements = messages.getString("achievement.list.no-achievement");
+            String emptyAchievements = messages.getString("achievement.list.no-achievement", true);
             
             return head + "\n"
                     + "\n"
                     + emptyAchievements;
         }
         
-        String percentPattern = messages.getString("achievement.list.percent-pattern");
+        String percentPattern = messages.getString("achievement.list.percent-pattern", true);
         List<String> achievementsInfo = new ArrayList<>();
         
         achievements.forEach(achievement -> {
@@ -69,7 +69,7 @@ public class AchievementHandler extends MessageHandler {
             String precentInfo = percentPattern.replace("%percent%", "" + textPrecent);
             
             if(databaseManager.isOnlyOneOwner(achievementID)) {
-                precentInfo = messages.getString("achievement.list.the-only-one");
+                precentInfo = messages.getString("achievement.list.the-only-one", true);
             }
             
             String achievementInfo = name + "\n"

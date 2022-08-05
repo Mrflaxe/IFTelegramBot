@@ -258,25 +258,23 @@ public class QuestSessionManager {
         
         Keyboard replyKeyboardMarkup = new ReplyKeyboardMarkup(keyboard).resizeKeyboard(true);
         SendMessage request = new SendMessage(chatID, message);
-        ParseMode parseMode = ParseMode.HTML;
         
-        request.parseMode(parseMode);
+        request.parseMode(ParseMode.HTML);
         request.replyMarkup(replyKeyboardMarkup);
         
         bot.execute(request);
     }
     
     private void sendAchievementNotice(long chatID, Achievement achievement) {
-        String title = messages.getString("achievement.obtained");
+        String title = messages.getString("achievement.obtained", true);
         
         String achivementName = achievement.getName();
         String achievementDescription = achievement.getDescription();
         
         String message = title + "\n\n" + achivementName + "\n" + achievementDescription + "\n ";
         
-        ParseMode parseMode = ParseMode.HTML;
         SendMessage request = new SendMessage(chatID, message);
-        request.parseMode(parseMode);
+        request.parseMode(ParseMode.HTML);
         
         bot.execute(request);
     }

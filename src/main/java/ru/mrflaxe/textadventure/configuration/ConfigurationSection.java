@@ -11,10 +11,9 @@ import java.util.stream.Collectors;
 import org.yaml.snakeyaml.Yaml;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import ru.mrflaxe.textadventure.error.SectionNotFoundException;
+import ru.mrflaxe.textadventure.tool.HTMLSymbolFormatter;
 
-@RequiredArgsConstructor
 public class ConfigurationSection {
 
     @Getter
@@ -31,6 +30,18 @@ public class ConfigurationSection {
     
     private final Object containedData;
     
+    private HTMLSymbolFormatter formatter;
+    
+    public ConfigurationSection(String fileName, Path filePath, String sectionPath, String sectionName, Object data) {
+        this.fileName = fileName;
+        this.filePath = filePath;
+        this.sectionPath = sectionPath;
+        this.name = sectionName;
+        this.containedData = data;
+        
+        this.formatter = new HTMLSymbolFormatter();
+    }
+
     /**
      * Gives ConfigurationSection if exist from giving section path
      * @param sectionPath path
@@ -118,14 +129,19 @@ public class ConfigurationSection {
         return subsection.getInt();
     }
     
-    public String getString() {
-        return getString("");
+    public String getString(boolean specialSymbolsFormatting) {
+        return getString("", specialSymbolsFormatting);
     }
     
-    public String getString(String sectionPath) {
+    public String getString(String sectionPath, boolean specialSymbolsFormatting) {
         if(sectionPath.isEmpty()) {
             try {
                 String data = (String) containedData;
+                
+                if(specialSymbolsFormatting) {
+                    data = formatter.formmat(data);
+                }
+                
                 return data;
             } catch (ClassCastException exception) {
                 return "config_error";
@@ -138,21 +154,32 @@ public class ConfigurationSection {
             throw new SectionNotFoundException(sectionPath, fileName);
         }
         
-        return subsection.getString();
+        return subsection.getString(specialSymbolsFormatting);
     }
     
-    public List<String> getStringList() {
-        return getStringList("");
+    public String getString(String sectionPath) {
+        return getString(sectionPath, false);
+    }
+    
+    public List<String> getStringList(boolean specialSymbolsFormatting) {
+        return getStringList("", specialSymbolsFormatting);
     }
     
     @SuppressWarnings("unchecked")
-    public List<String> getStringList(String sectionPath) {
+    public List<String> getStringList(String sectionPath, boolean specialSymbolsFormatting) {
         if(sectionPath.isEmpty()) {
             try {
                 Collection<Object> collection = (Collection<Object>) containedData;
+                
+                if(specialSymbolsFormatting) {
+                    return collection.stream()
+                            .map(object -> formatter.formmat((String) object))
+                            .collect(Collectors.toList());
+                }
+                
                 return collection.stream()
-                    .map(object -> (String) object)
-                    .collect(Collectors.toList());
+                        .map(object -> (String) object)
+                        .collect(Collectors.toList());
                 
             } catch (ClassCastException exception) {
                 List<String> list = new ArrayList<>();
@@ -167,7 +194,11 @@ public class ConfigurationSection {
             throw new SectionNotFoundException(sectionPath, fileName);
         }
         
-        return subsection.getStringList();
+        return subsection.getStringList(specialSymbolsFormatting);
+    }
+    
+    public List<String> getStringList(String sectionPath) {
+        return getStringList(sectionPath, false);
     }
     
     public boolean getBoolean() {

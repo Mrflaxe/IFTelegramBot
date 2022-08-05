@@ -52,11 +52,11 @@ public class BranchContainer {
         
         
         // Creating demo configuration if not exist TODO add config setting to disable this thing
-        Path demoConfigPath = qusetFolderPath.resolve("start-demo.yml");
+        Path demoConfigPath = qusetFolderPath.resolve("quest.yml");
         
         if(!Files.isRegularFile(demoConfigPath)) {
             InputStream resource = this.getClass()
-                    .getResourceAsStream("/quest/start-demo.yml");
+                    .getResourceAsStream("/quest/quest.yml");
             
             if(resource == null) {
                 System.err.println("resource is null");
@@ -96,7 +96,7 @@ public class BranchContainer {
             String branchId = set.getKey();
             ConfigurationSection branchSection = set.getValue();
             
-            List<String> lines = branchSection.getStringList("lines");
+            List<String> lines = branchSection.getStringList("lines", true);
             
             // If branch has section ending means this branch doesn't have
             // answer options.
@@ -143,7 +143,7 @@ public class BranchContainer {
         List<AnswerOption> answerOptions = new ArrayList<>();
         
         subSections.values().forEach(value -> {
-            String text = value.getString("text");
+            String text = value.getString("text", true);
             String nextBranchId = value.getString("link");
             
             AnswerOption answerOption = new AnswerOption(text, nextBranchId);

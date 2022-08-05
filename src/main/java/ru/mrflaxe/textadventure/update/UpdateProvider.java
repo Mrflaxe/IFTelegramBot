@@ -103,7 +103,7 @@ public class UpdateProvider implements UpdatesListener {
             }
             
             if(cooldown.isCooldown()) {
-                String message = messages.getString("wait");
+                String message = messages.getString("wait", true);
                 
                 SendMessage request = new SendMessage(user.getChatID(), message);
                 request.parseMode(ParseMode.HTML);
@@ -139,7 +139,7 @@ public class UpdateProvider implements UpdatesListener {
     }
     
     public void returnToMainMenu(User user) {
-        String message = messages.getString("menu.message");
+        String message = messages.getString("menu.message", true);
         long chatID = user.getChatID();
         
         // Saving new profile to database
@@ -163,17 +163,16 @@ public class UpdateProvider implements UpdatesListener {
                 }).resizeKeyboard(true);
         
         SendMessage request = new SendMessage(chatID, message).replyMarkup(replKeyboardMarkup);
-        ParseMode parseMode = ParseMode.HTML;
-        request.parseMode(parseMode);
+        request.parseMode(ParseMode.HTML);
         
         telegramBot.execute(request);
     }
     
     private void registerButtons() {
-        this.profileButton = messages.getString("menu.keyboard.achievement");
-        this.infoButton = messages.getString("menu.keyboard.info");
-        this.playButton = messages.getString("menu.keyboard.play.start");
-        this.continueButton = messages.getString("menu.keyboard.play.continue");
+        this.profileButton = messages.getString("menu.keyboard.achievement", true);
+        this.infoButton = messages.getString("menu.keyboard.info", true);
+        this.playButton = messages.getString("menu.keyboard.play.start", true);
+        this.continueButton = messages.getString("menu.keyboard.play.continue", true);
         
         addAlternativeCommandHandler(profileButton, "/achievement");
         addAlternativeCommandHandler(infoButton, "/info");

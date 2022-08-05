@@ -28,11 +28,7 @@ public class StartHandler extends MessageHandler {
         
         updateProvider.returnToMainMenu(user);
         
-        String text = messages.getString("welcome");
-        
-        if(text == null || text.isEmpty()) {
-            text = "Default_message";
-        }
+        String text = messages.getString("welcome", true);
         
         text = text.replace("%name%", name);
         

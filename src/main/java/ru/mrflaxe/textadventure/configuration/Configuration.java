@@ -161,7 +161,7 @@ public class Configuration {
         return currentSection.getInt(updatedSectionPath);
     }
     
-    public String getString(String section) {
+    public String getString(String section, boolean specialSymbolsFormatting) {
         String[] sections = section.split("\\.");
         ConfigurationSection currentSection = content.get(sections[0]);
         
@@ -171,10 +171,14 @@ public class Configuration {
         
         String updatedSectionPath = section.replaceFirst(sections[0], "").replaceFirst(".", "");
         
-        return currentSection.getString(updatedSectionPath);
+        return currentSection.getString(updatedSectionPath, specialSymbolsFormatting);
     }
     
-    public List<String> getStringList(String section) {
+    public String getString(String section) {
+        return getString(section, false);
+    }
+    
+    public List<String> getStringList(String section, boolean specialSymbolsFormatting) {
         String[] sections = section.split("\\.");
         ConfigurationSection currentSection = content.get(sections[0]);
         
@@ -185,6 +189,10 @@ public class Configuration {
         String updatedSectionPath = section.replaceFirst(sections[0], "").replaceFirst(".", "");
         
         return currentSection.getStringList(updatedSectionPath);
+    }
+    
+    public List<String> getStringList(String section) {
+        return getStringList(section, false);
     }
     
     public boolean getBoolean(String section) {

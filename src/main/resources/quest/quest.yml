@@ -47,7 +47,7 @@ gratitude:
 ending-bad:
   lines:
     - "So why are you still here?"
-    - "<b>You was banned</b>"
+    - "<b>[You was banned]</b>"
     - "For unban write to the developer."
   ending: true
   achievement: "bad-tester"

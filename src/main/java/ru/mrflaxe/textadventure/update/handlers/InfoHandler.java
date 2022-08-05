@@ -32,10 +32,10 @@ public class InfoHandler extends MessageHandler {
     }
 
     private String buildInfoMessage() {
-        String author = messages.getString("info.author");
-        String github = messages.getString("info.github");
-        String head = messages.getString("info.head");
-        String pattern = messages.getString("info.pattern");
+        String author = messages.getString("info.author", true);
+        String github = messages.getString("info.github", true);
+        String head = messages.getString("info.head", true);
+        String pattern = messages.getString("info.pattern", true);
         
         List<String> commands = new ArrayList<>();
         Map<String, ConfigurationSection> subsections = messages.getAllSubsections("info.commands");
@@ -43,7 +43,7 @@ public class InfoHandler extends MessageHandler {
         subsections.entrySet().stream()
             .forEach(set -> {
                 String command = set.getKey();
-                String description = set.getValue().getString();
+                String description = set.getValue().getString(true);
                 
                 String commandInfo = pattern.replace("%command%", "/" + command);
                 commandInfo = commandInfo.replace("%description%", description);

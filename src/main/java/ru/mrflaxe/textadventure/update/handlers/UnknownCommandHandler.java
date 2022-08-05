@@ -17,7 +17,7 @@ public class UnknownCommandHandler extends MessageHandler {
 
     @Override
     public void handle(Update update) {
-        String message = messages.getString("error.unknown-command");
+        String message = messages.getString("error.unknown-command", true);
         long chatID = update.message().chat().id();
         
         SendMessage request = new SendMessage(chatID, message);
