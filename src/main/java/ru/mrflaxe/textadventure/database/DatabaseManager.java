@@ -171,27 +171,32 @@ public class DatabaseManager {
         }
     }
     
-    public List<AchievementModel> getCertainAchievments(String achievementName) {
+    public List<AchievementModel> getCertainAchievments(String achievementID) {
         try {
-            return achievementDao.queryForEq("achievement_id", achievementName);
+            return achievementDao.queryForEq("achievement_id", achievementID);
         } catch (SQLException e) {
             errorLog("get list of", AchievementModel.class, e);
             return null;
         }
     }
     
-    public float getAchievmentPrecent(String achievmentName) {
-        int allProfiles = getProfiles().size();
+    public float getAchievmentPercent(String achievmentID) {
+        float allProfiles = getProfiles().size();
         
-        List<AchievementModel> certainAchievments = getCertainAchievments(achievmentName);
+        List<AchievementModel> certainAchievments = getCertainAchievments(achievmentID);
         
         if(certainAchievments == null || certainAchievments.isEmpty()) {
             return 0f;
         }
         
-        int givenAchivments = certainAchievments.size();
+        float givenAchivments = certainAchievments.size();
+        float percent = givenAchivments/allProfiles * 100;
         
-        return allProfiles/givenAchivments;
+        return percent;
+    }
+    
+    public boolean isOnlyOneOwner(String achievementID) {
+        return getCertainAchievments(achievementID).size() == 1;
     }
     
     private void errorLog(String action, Class<?> model, SQLException e) {

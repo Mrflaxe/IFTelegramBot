@@ -15,7 +15,7 @@ public class Main {
     public static void main(String[] args) {
         Configuration messages = new Configuration("messages.yml");
         Configuration config = new Configuration("config.yml");
-        Configuration achievments = new Configuration("achievments.yml");
+        Configuration achievements = new Configuration("achievements.yml");
         
         Database database = new Database(config);
         initializeDatabase(database);
@@ -28,7 +28,7 @@ public class Main {
             System.err.println("Failed to create DatabaseManager");
         }
         
-        MyBot bot = new MyBot(messages, config, achievments, databaseManager);
+        MyBot bot = new MyBot(messages, config, achievements, databaseManager);
         bot.launch();
         
         new ConsoleRequestHandler(bot).run();

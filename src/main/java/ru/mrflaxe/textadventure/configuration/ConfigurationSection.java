@@ -53,13 +53,13 @@ public class ConfigurationSection {
         
         if(subsection == null) {
             if(!sneakyThrows) {
-                throw new SectionNotFoundException(sectionPath, fileName);
+                throw new SectionNotFoundException(sections[0], fileName);
             }
             
             return null;
         }
 
-        return subsection.getSection(sectionPath.replace(sections[0], "").replaceFirst(".", ""), sneakyThrows);
+        return subsection.getSection(sectionPath.replaceFirst(sections[0], "").replaceFirst(".", ""), sneakyThrows);
     }
     
     public boolean containsSection(String sectionPath) {

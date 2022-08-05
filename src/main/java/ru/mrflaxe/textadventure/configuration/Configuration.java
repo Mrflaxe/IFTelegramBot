@@ -122,7 +122,7 @@ public class Configuration {
         }
         
         ConfigurationSection currentSection = content.get(sections[0]);
-        String updatedSectionPath = section.replace(sections[0], "");
+        String updatedSectionPath = section.replaceFirst(sections[0], "");
         
         return currentSection.getSection(updatedSectionPath);
     }
@@ -143,7 +143,7 @@ public class Configuration {
         String[] sections = parentSectionPath.split("\\.");
         ConfigurationSection currentSection = content.get(sections[0]);
         
-        String updatedSectionPath = parentSectionPath.replace(sections[0], "").replaceFirst(".", "");
+        String updatedSectionPath = parentSectionPath.replaceFirst(sections[0], "").replaceFirst(".", "");
         
         return currentSection.getSection(updatedSectionPath).getAllSubSections();
     }
@@ -156,7 +156,7 @@ public class Configuration {
             throw new SectionNotFoundException(section, fileName);
         }
         
-        String updatedSectionPath = section.replace(sections[0], "").replaceFirst(".", "");
+        String updatedSectionPath = section.replaceFirst(sections[0], "").replaceFirst(".", "");
         
         return currentSection.getInt(updatedSectionPath);
     }
@@ -169,7 +169,7 @@ public class Configuration {
             throw new SectionNotFoundException(section, fileName);
         }
         
-        String updatedSectionPath = section.replace(sections[0], "").replaceFirst(".", "");
+        String updatedSectionPath = section.replaceFirst(sections[0], "").replaceFirst(".", "");
         
         return currentSection.getString(updatedSectionPath);
     }
@@ -182,7 +182,7 @@ public class Configuration {
             throw new SectionNotFoundException(section, fileName);
         }
         
-        String updatedSectionPath = section.replace(sections[0], "").replaceFirst(".", "");
+        String updatedSectionPath = section.replaceFirst(sections[0], "").replaceFirst(".", "");
         
         return currentSection.getStringList(updatedSectionPath);
     }

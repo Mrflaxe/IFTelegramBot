@@ -1,0 +1,7 @@
+bad-tester:
+  name: "<b>Bad tester</b>"
+  description: "It was rude for the developer :("
+
+good-tester:
+  name: "<b>Good tester</b>"
+  description: "Support the developer :3"

@@ -20,12 +20,13 @@ import ru.mrflaxe.textadventure.database.DatabaseManager;
 import ru.mrflaxe.textadventure.database.model.ProfileModel;
 import ru.mrflaxe.textadventure.quest.QuestSessionManager;
 import ru.mrflaxe.textadventure.tool.Cooldown;
+import ru.mrflaxe.textadventure.update.handlers.AchievementHandler;
 import ru.mrflaxe.textadventure.update.handlers.ExitHandler;
 import ru.mrflaxe.textadventure.update.handlers.InfoHandler;
 import ru.mrflaxe.textadventure.update.handlers.MessageHandler;
 import ru.mrflaxe.textadventure.update.handlers.PlayHandler;
-import ru.mrflaxe.textadventure.update.handlers.ProfileHandler;
 import ru.mrflaxe.textadventure.update.handlers.StartHandler;
+import ru.mrflaxe.textadventure.update.handlers.UnknownCommandHandler;
 import ru.mrflaxe.textadventure.user.User;
 import ru.mrflaxe.textadventure.user.UserProvider;
 
@@ -40,6 +41,7 @@ public class UpdateProvider implements UpdatesListener {
     private final QuestSessionManager questSessions;
     
     private Map<String, MessageHandler> commandHandlers;
+    private MessageHandler unknownCommandHandler;
     
     private String profileButton;
     private String infoButton;
@@ -57,6 +59,7 @@ public class UpdateProvider implements UpdatesListener {
             UserProvider userProvider
             ) {
         this.commandHandlers = new HashMap<>();
+        this.unknownCommandHandler = new UnknownCommandHandler(telegramBot, messages, this);
         
         this.telegramBot = telegramBot;
         this.messages = messages;
@@ -124,8 +127,10 @@ public class UpdateProvider implements UpdatesListener {
             if(textMessage != null) {
                 if(commandHandlers.containsKey(textMessage)) {
                     commandHandlers.get(textMessage).handle(update);
+                    return;
                 } else {
-                    // TODO incorrect command handler
+                    unknownCommandHandler.handle(update);
+                    return;
                 }
             }
         });
@@ -165,19 +170,19 @@ public class UpdateProvider implements UpdatesListener {
     }
     
     private void registerButtons() {
-        this.profileButton = messages.getString("menu.keyboard.profile");
+        this.profileButton = messages.getString("menu.keyboard.achievement");
         this.infoButton = messages.getString("menu.keyboard.info");
         this.playButton = messages.getString("menu.keyboard.play.start");
         this.continueButton = messages.getString("menu.keyboard.play.continue");
         
-        addAlternativeCommandHandler(profileButton, "/profile");
+        addAlternativeCommandHandler(profileButton, "/achievement");
         addAlternativeCommandHandler(infoButton, "/info");
         addAlternativeCommandHandler(playButton, "/play");
         addAlternativeCommandHandler(continueButton, "/play");
     }
     
     private void initializeHandlers() {
-        commandHandlers.put("/profile", new ProfileHandler(telegramBot, messages, this));
+        commandHandlers.put("/achievement", new AchievementHandler(telegramBot, messages, this, databaseManager));
         commandHandlers.put("/info", new InfoHandler(telegramBot, messages, this));
         commandHandlers.put("/play", new PlayHandler(telegramBot, messages, this, userProvider, questSessions));
         commandHandlers.put("/start", new StartHandler(telegramBot, messages, this, userProvider));

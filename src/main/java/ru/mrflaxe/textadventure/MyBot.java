@@ -18,24 +18,22 @@ import ru.mrflaxe.textadventure.user.UserProvider;
 public class MyBot {
     
     private final TelegramBot myBot;
-    private final Configuration config;
     private final Configuration messages;
     private final DatabaseManager databaseManager;
     private final UserProvider userProvider;
-    private final AchievmentManager achievmentManager;
+    private final AchievmentManager achievementManager;
     private final UpdateProvider updateProvider;
     private final QuestSessionManager sessionManager;
     
-    public MyBot(Configuration messages, Configuration config, Configuration achievments, DatabaseManager databaseManager) {
+    public MyBot(Configuration messages, Configuration config, Configuration achievements, DatabaseManager databaseManager) {
         String token = config.getString("bot-token");
         
         this.myBot = new TelegramBot(token);
-        this.config = config;
         this.messages = messages;
         this.databaseManager = databaseManager;
         this.userProvider = new UserProvider(databaseManager);
-        this.achievmentManager = new AchievmentManager(achievments, databaseManager);
-        this.updateProvider = new UpdateProvider(myBot, config, messages, databaseManager, achievmentManager, userProvider);
+        this.achievementManager = new AchievmentManager(achievements, databaseManager);
+        this.updateProvider = new UpdateProvider(myBot, config, messages, databaseManager, achievementManager, userProvider);
         this.sessionManager = updateProvider.getQuestSessions();
     }
     

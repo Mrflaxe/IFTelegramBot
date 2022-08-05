@@ -14,7 +14,7 @@ menu:
     play:
       start: "Start game"
       continue: "Continue game"
-    profile: "Profile"
+    achievement: "Achivements"
     info: "Info"
 
 info:
@@ -24,15 +24,20 @@ info:
   pattern: "%command% — %description%"
   commands:
     start: "start conversation with this bot"
-    profile: "interaction with own profile"
+    achievement: "shows your achievements"
     play: "start/continue the quest"
     exit: "leave the game"
     info: "show this message"
 
 achievement:
-  obtained: "<b>You get achievement:</b>"
+  obtained: "<b>You get the achievement:</b>"
+  list:
+    head: "<b>Your achievements:</b>"
+    no-achievement: "<i>You haven't any achievement yet.</i>"
+    percent-pattern: "<code>[This achievement have %percent%% of users]</code>"
+    the-only-one: "<code>[This achievement have only you and no one else yet]</code>"
 
-wait: "<i>Wait some time befor sending again.</i>"
+wait: "<i>Wait some time before sending again.</i>"
 
 on-disable: "<b>Bot sleeping...</b>"
 
