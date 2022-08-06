@@ -62,7 +62,7 @@ public class QuestSessionManager {
         this.messages = messages;
         this.bot = bot;
         
-        this.ANSWER_OPTION_HEADER = messages.getString("quest.answer-options.head");
+        this.ANSWER_OPTION_HEADER = messages.getString("quest.answer-options.header");
         
         this.activePlayerData = new HashMap<>();
     }

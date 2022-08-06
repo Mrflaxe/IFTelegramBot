@@ -1,13 +1,18 @@
 error:
+  # Will send when uers writes something unhandleable
   unknown-command: "<b>I don't know this command :(</b>"
 
+# Welcome message sends after /start command
 welcome: "<b>Hi, %name%, I'm Bob the bot.</b>\n
 \n
 If you want to play text quest use /play.\n
 If you want rest from the game use /exit"
 
 menu:
+  # Message user recieve when gets into main menu
   message: "<b>You in main menu.</b>"
+
+  # Menu keyboard management
   keyboard:
     play:
       start: "Start game"
@@ -20,6 +25,7 @@ info:
   github: "GitHub open source code: https://github.com/Mrflaxe/IFTelegramBot"
   head: "<b>Commands:</b>"
   pattern: "%command% — %description%"
+  # Here you can change description of commands
   commands:
     start: "start conversation with this bot"
     achievement: "shows your achievements"
@@ -33,12 +39,15 @@ achievement:
     head: "<b>Your achievements:</b>"
     no-achievement: "<i>You haven't any achievement yet.</i>"
     percent-pattern: "<code>[This achievement have %percent%% of users]</code>"
+    # This message can be part of achievement description if user is the only one who have the achievement
     the-only-one: "<code>[This achievement have only you and no one else yet]</code>"
 
+# Sends when player sending messages more often than cooldown allows
 wait: "<i>Wait some time before sending again.</i>"
 
+# On disabling users who currently playing will get this message
 on-disable: "<b>Bot sleeping...</b>"
 
 quest:
   answer-options: 
-    head: "<b>Answer options:</b>"
+    header: "<b>Answer options:</b>"

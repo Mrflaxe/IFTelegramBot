@@ -1,4 +1,10 @@
+# This is start branch.
+# Any quest in future will start exactly from this branch.
+#
+# 'start' also is branch id. It's important information bacuse all links refer to id.
 start:
+  # This is the lines of this branch. They will consistently sended to a player
+  # thereby telling the story that you will write
   lines:
     - "It's the start branch. All quests always will start from this."
     - "Section 'lines' provide sequence of messages to send to a player. \n
@@ -6,9 +12,15 @@ start:
     - "This is the last line of start branch. After this will be sended 
     answer-option message where player will face a choice."
 
+  # This is the answer options.
+  # They makes able to make chooses by player
   answer-options:
+    # You are able to add any count of answer options.
+    # Just create new section with any name. Add 'text' and 'link' subsections and that's all.
     first:
+      # Text is what player will answer
       text: "Realy?"
+      # link is next branch where player will be sended if chooses this option
       link: "first-1"
     second: 
       text: "I don't care."
@@ -17,6 +29,9 @@ start:
       text: "Okay, continue."
       link: "first-1"
 
+# This is another branch. All exactly same for the previous branch.
+# You are able to add so many branches you want, but be careful!
+# If you create two or more branches with same id it will cause problems.
 first-1:
   lines:
     - "So there is another branch now.\n
@@ -42,6 +57,9 @@ gratitude:
     first:
       text: "[Continue]"
       link: "ending-good"
+  # Look, this is achievement section.
+  # By adding this section and achievement id in a branch
+  # you gives a player this achievement.
   achievement: "good-tester"
 
 ending-bad:
@@ -49,6 +67,11 @@ ending-bad:
     - "So why are you still here?"
     - "<b>[You was banned]</b>"
     - "For unban write to the developer."
+
+  # This is ending section.
+  # This section tells to my program that this branch don't have any answer options.
+  # So after last line of this branch will be showed player will returned to main menu.
+  # Simple.
   ending: true
   achievement: "bad-tester"
 
@@ -62,3 +85,5 @@ ending-good:
     - "After this branch player will be returned to main menu where he can play again."
     - "That's all."
   ending: true
+
+# That's all what you need to know to create your own interractive story. Good luck!
