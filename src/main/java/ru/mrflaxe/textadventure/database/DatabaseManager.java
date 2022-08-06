@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
@@ -29,6 +31,9 @@ public class DatabaseManager {
         this.achievementDao = DaoManager.createDao(connection, AchievementModel.class);
     }
     
+    /**
+     * Closes the database connection
+     */
     public void shutdown() {
         try {
             this.connection.close();
@@ -38,6 +43,12 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Creates new profile model and save model for this profile.
+     * @param chatID
+     * @param userName
+     * @return new ProfileModel of this user
+     */
     public ProfileModel createNewProfile(long chatID, String userName) {
         SaveModel newSaveModel = new SaveModel();
         saveQuestSave(newSaveModel);
@@ -47,6 +58,10 @@ public class DatabaseManager {
         return new ProfileModel(chatID, userName, saveID);
     }
     
+    /**
+     * Saves changes in profile model or saves the model if it doesn't exist in database yet.
+     * @param profile - profile to save
+     */
     public void saveProfile(ProfileModel profile) {
         try {
             profileDao.createOrUpdate(profile);
@@ -55,6 +70,13 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Lazy method. <br>
+     * Creates ProfileModel object and saves it in database by self.
+     * @param chatID
+     * @param userName
+     * @return created profile model
+     */
     public ProfileModel createAndSaveProfile(long chatID, String userName) {
         ProfileModel newProfile = createNewProfile(chatID, userName);
         saveProfile(newProfile);
@@ -62,6 +84,12 @@ public class DatabaseManager {
         return newProfile;
     }
     
+    /**
+     * Gets profile model from database by given chat id.
+     * @param chatID - chat id to identify the profile
+     * @return profile model if found or null
+     */
+    @Nullable
     public ProfileModel getProfile(long chatID) {
         try {
             ProfileModel profile = profileDao.queryForId("" + chatID);
@@ -77,10 +105,19 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Checks if database contains profile with given chat id.
+     * @param chatID - chat id to check
+     * @return true if contains. Otherwise false
+     */
     public boolean hasProfile(long chatID) {
         return getProfile(chatID) != null;
     }
     
+    /**
+     * Gets all profiles contained in database.
+     * @return all profile models in list
+     */
     public List<ProfileModel> getProfiles() {
         try {
             return profileDao.queryForAll();
@@ -90,6 +127,10 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Deletes profile model from databse.
+     * @param profile - profile to delete
+     */
     public void deleteProfile(ProfileModel profile) {
         SaveModel save = getQuestSave(profile);
         
@@ -104,6 +145,10 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Saves changes in save model or saves the model if it doesn't exist in database yet.
+     * @param save - save to save :D
+     */
     public void saveQuestSave(SaveModel save) {
         try {
             saveDao.createOrUpdate(save);
@@ -112,6 +157,11 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Checks if profile has active quest save.
+     * @param profile - profile to check for save
+     * @return true if save exist or false
+     */
     public boolean hasQuestSave(ProfileModel profile) {
         SaveModel save = getQuestSave(profile);
         if(save == null) {
@@ -121,6 +171,11 @@ public class DatabaseManager {
         return save.getLastBranchID() != null;
     }
     
+    /**
+     * Gets save model for profile from database
+     * @param profile - profile what provides save
+     * @return save model or null if something will go wrong
+     */
     public SaveModel getQuestSave(ProfileModel profile) {
         String saveId = profile.getSaveID();
         
@@ -132,6 +187,11 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Saves new branch id in the save model of given user.
+     * @param user - user whose save
+     * @param newBrachID - new branch id to save
+     */
     public void updateSave(User user, String newBrachID) {
         ProfileModel profile = user.getUserProfile();
         
@@ -141,6 +201,10 @@ public class DatabaseManager {
         saveQuestSave(save);
     }
     
+    /**
+     * Deletes save model from database.
+     * @param save
+     */
     public void deleteQuestSave(SaveModel save) {
         try {
             saveDao.delete(save);
@@ -149,11 +213,19 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Clears branch id from given save model and saves it in database.
+     * @param save
+     */
     public void clearQuestSave(SaveModel save) {
         save.setLastBranchID(null);
         saveQuestSave(save);
     }
     
+    /**
+     * Saves changes in achievement model or saves the model if it doesn't exist in database yet.
+     * @param achievement - achievement to save
+     */
     public void saveAchievment(AchievementModel achievement) {
         try {
             achievementDao.createOrUpdate(achievement);
@@ -162,6 +234,12 @@ public class DatabaseManager {
         }
     }
     
+    /**
+     * Gets all achievements by given chat id from database.
+     * @param chatID - id to filter achievements
+     * @return list of recieved achievements
+     */
+    @Nullable
     public List<AchievementModel> getAchievements(long chatID) {
         try {
             return achievementDao.queryForEq("chat_id", chatID);
@@ -171,27 +249,47 @@ public class DatabaseManager {
         }
     }
     
-    public List<AchievementModel> getCertainAchievments(String achievementName) {
+    /**
+     * Gets all obtained achievement with given achievement id.
+     * @param achievementID - achievement id to filter achievements
+     * @return list of currently obtained achievements with given id.
+     */
+    public List<AchievementModel> getCertainAchievments(String achievementID) {
         try {
-            return achievementDao.queryForEq("achievement_id", achievementName);
+            return achievementDao.queryForEq("achievement_id", achievementID);
         } catch (SQLException e) {
             errorLog("get list of", AchievementModel.class, e);
             return null;
         }
     }
     
-    public float getAchievmentPrecent(String achievmentName) {
-        int allProfiles = getProfiles().size();
+    /**
+     * Gets percent of users who obtained achievement with given id.
+     * @param achievmentID - achievemnt to calculate percent.
+     * @return percent of users who obtained achievement with given id
+     */
+    public float getAchievmentPercent(String achievmentID) {
+        float allProfiles = getProfiles().size();
         
-        List<AchievementModel> certainAchievments = getCertainAchievments(achievmentName);
+        List<AchievementModel> certainAchievments = getCertainAchievments(achievmentID);
         
         if(certainAchievments == null || certainAchievments.isEmpty()) {
             return 0f;
         }
         
-        int givenAchivments = certainAchievments.size();
+        float givenAchivments = certainAchievments.size();
+        float percent = givenAchivments/allProfiles * 100;
         
-        return allProfiles/givenAchivments;
+        return percent;
+    }
+    
+    /**
+     * Checks if givem achievement currently have only one person.
+     * @param achievementID - achievement to check
+     * @return true if does or false
+     */
+    public boolean isOnlyOneOwner(String achievementID) {
+        return getCertainAchievments(achievementID).size() == 1;
     }
     
     private void errorLog(String action, Class<?> model, SQLException e) {

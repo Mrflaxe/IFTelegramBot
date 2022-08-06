@@ -26,14 +26,13 @@ public class StartHandler extends MessageHandler {
         String name = update.message().chat().firstName();
         User user = userProvider.getUser(chatID);
         
+        // Go to the main menu!
         updateProvider.returnToMainMenu(user);
         
-        String text = messages.getString("welcome");
+        // Welcome new user!
+        String text = messages.getString("welcome", true);
         
-        if(text == null || text.isEmpty()) {
-            text = "Default_message";
-        }
-        
+        // Let's address by name
         text = text.replace("%name%", name);
         
         SendMessage request = new SendMessage(chatID, text);

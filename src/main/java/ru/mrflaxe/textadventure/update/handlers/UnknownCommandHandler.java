@@ -8,20 +8,21 @@ import com.pengrad.telegrambot.request.SendMessage;
 import ru.mrflaxe.textadventure.configuration.Configuration;
 import ru.mrflaxe.textadventure.update.UpdateProvider;
 
-public class ProfileHandler extends MessageHandler {
+public class UnknownCommandHandler extends MessageHandler {
 
-    public ProfileHandler(TelegramBot bot, Configuration messages, UpdateProvider updateProvider) {
+    public UnknownCommandHandler(TelegramBot bot, Configuration messages, UpdateProvider updateProvider) {
         super(bot, messages, updateProvider);
+        
     }
 
     @Override
     public void handle(Update update) {
-        Long chatId = update.message().chat().id();
-        String message = messages.getString("error.button.not-ready");
+        String message = messages.getString("error.unknown-command", true);
+        long chatID = update.message().chat().id();
         
-        SendMessage request = new SendMessage(chatId, message);
-        ParseMode parseMode = ParseMode.HTML;
-        request.parseMode(parseMode);
+        SendMessage request = new SendMessage(chatID, message);
+        request.parseMode(ParseMode.HTML);
+        
         bot.execute(request);
     }
 }

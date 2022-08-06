@@ -1,28 +1,53 @@
 error:
-  button:
-    not-ready: "<b>This button not working yet :(</b>"
+  # Will send when uers writes something unhandleable
   unknown-command: "<b>I don't know this command :(</b>"
 
+# Welcome message sends after /start command
 welcome: "<b>Hi, %name%, I'm Bob the bot.</b>\n
 \n
-If ypu want to play text quest use /play.\n
+If you want to play text quest use /play.\n
 If you want rest from the game use /exit"
 
 menu:
+  # Message user recieve when gets into main menu
   message: "<b>You in main menu.</b>"
+
+  # Menu keyboard management
   keyboard:
     play:
       start: "Start game"
       continue: "Continue game"
-    profile: "Profile"
+    achievement: "Achivements"
     info: "Info"
 
+info:
+  author: "<b>Author: @mrflaxe</b>"
+  github: "GitHub open source code: https://github.com/Mrflaxe/IFTelegramBot"
+  head: "<b>Commands:</b>"
+  pattern: "%command% — %description%"
+  # Here you can change description of commands
+  commands:
+    start: "start conversation with this bot"
+    achievement: "shows your achievements"
+    play: "start/continue the quest"
+    exit: "leave the game"
+    info: "show this message"
+
 achievement:
-  obtained: "<b>You get achievement:</b>"
+  obtained: "<b>You get the achievement:</b>"
+  list:
+    head: "<b>Your achievements:</b>"
+    no-achievement: "<i>You haven't any achievement yet.</i>"
+    percent-pattern: "<code>[This achievement have %percent%% of users]</code>"
+    # This message can be part of achievement description if user is the only one who have the achievement
+    the-only-one: "<code>[This achievement have only you and no one else yet]</code>"
 
-wait: "<i>Wait some time befor sending again.</i>"
+# Sends when player sending messages more often than cooldown allows
+wait: "<i>Wait some time before sending again.</i>"
 
+# On disabling users who currently playing will get this message
 on-disable: "<b>Bot sleeping...</b>"
 
 quest:
-  answer-options-pattern: "<b>Answer options:</b>"
+  answer-options: 
+    header: "<b>Answer options:</b>"

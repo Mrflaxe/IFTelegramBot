@@ -51,6 +51,6 @@ public class AchievementModel {
     }
     
     public Achievement getAchievment() {
-        return new Achievement(achievementName, description, achievementID);
+        return new Achievement(achievementID, achievementName, description);
     }
 }

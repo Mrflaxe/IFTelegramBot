@@ -33,15 +33,20 @@ public class BranchContainer {
         this.achievementManager = achievmentManager;
         
         branches = new HashMap<>();
-        initializeTextSections();
+        initializeQuestBranches();
     }
     
+    /**
+     * Returns branch by given id if exist or null.
+     * @param id of branch
+     * @return branch by given id
+     */
     @Nullable
     public QuestBranch getBranch(String id) {
         return branches.get(id);
     }
     
-    private void initializeTextSections() {
+    private void initializeQuestBranches() {
         // Creating quest folder if not exist yet
         File questFolder = new File("configs" + File.separator + "quest");
         Path qusetFolderPath = questFolder.toPath();
@@ -52,27 +57,31 @@ public class BranchContainer {
         
         
         // Creating demo configuration if not exist TODO add config setting to disable this thing
-        Path demoConfigPath = qusetFolderPath.resolve("start-demo.yml");
+        Path questConfigPath = qusetFolderPath.resolve("quest.yml");
         
-        if(!Files.isRegularFile(demoConfigPath)) {
+        // If quest file does not exist will create sample from resources
+        if(!Files.isRegularFile(questConfigPath)) {
             InputStream resource = this.getClass()
-                    .getResourceAsStream("/quest/start-demo.yml");
+                    .getResourceAsStream("/quest/quest.yml");
             
             if(resource == null) {
                 System.err.println("resource is null");
             }
             
             try {
-                Files.createFile(demoConfigPath);
-                Files.copy(resource, demoConfigPath, StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Copied a configuration file from internal resource to: " + demoConfigPath);
+                Files.createFile(questConfigPath);
+                Files.copy(resource, questConfigPath, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Copied a configuration file from internal resource to: " + questConfigPath);
             } catch (IOException e) {
-                System.err.println("Failed to create " + demoConfigPath + " file.");
+                System.err.println("Failed to create " + questConfigPath + " file.");
             }
         }
         
         File[] files = questFolder.listFiles();
         
+        // In quest folder can be more than one yaml files.
+        // It's allow to avoid big files which hard to manage
+        // TODO add possibility to group files in folders for better navigation.
         for (File file : files) {
             String fileName = file.getName();
             
@@ -83,28 +92,32 @@ public class BranchContainer {
             Configuration questConfig = new Configuration(qusetFolderPath, fileName);
             questConfig.refresh();
             
-            readQuestConfig(questConfig);
+            retrieveBranchesFromConfig(questConfig);
         }
         
         return;
     }
     
-    private void readQuestConfig(Configuration questConfig) {
+    
+    private void retrieveBranchesFromConfig(Configuration questConfig) {
         Map<String, ConfigurationSection> questBranches = questConfig.getAllSubsections();
         
+        // Each entry set is single branch
+        // String is id of this branch and configuration section contains all other information
         questBranches.entrySet().stream().forEach(set -> {
             String branchId = set.getKey();
             ConfigurationSection branchSection = set.getValue();
             
-            List<String> lines = branchSection.getStringList("lines");
+            // Getting lines from config section
+            List<String> lines = branchSection.getStringList("lines", true);
             
-            // If branch has section ending means this branch doesn't have
-            // answer options.
+            // If branch has section ending means this branch doesn't have answer options.
+            // Only EndingAchievementBranch and EndingBranch objects can not have answer options.
             if(branchSection.containsSection("ending")) {
                 boolean ending = branchSection.getBoolean("ending");
                 
                 if(ending) {
-                    // If ending has achievment
+                    // If ending has achievment will created EndingAchievementBranch object.
                     if(branchSection.containsSection("achievement")) {
                         String achievementID = branchSection.getString("achievement");
                         Achievement achievement = achievementManager.getAchievement(achievementID);
@@ -114,6 +127,7 @@ public class BranchContainer {
                         return;
                     }
                     
+                    // Else will created just EndingBranch
                     QuestBranch branchData = new EndingBranch(branchId, lines);
                     branches.put(branchId, branchData);
                     return;
@@ -122,6 +136,7 @@ public class BranchContainer {
             
             List<AnswerOption> answerOptions = getAnswerOptions(branchSection);
             
+            // Now if common branch have achievement section will create AchievementBranch object
             if(branchSection.containsSection("achievement")) {
                 String achievementID = branchSection.getString("achievement");
                 Achievement achievement = achievementManager.getAchievement(achievementID);
@@ -131,6 +146,7 @@ public class BranchContainer {
                 return;
             }
             
+            // Otherwise just CommonBranch
             QuestBranch branchData = new CommonBranch(branchId, lines, answerOptions);
             branches.put(branchId, branchData);
         });
@@ -143,7 +159,7 @@ public class BranchContainer {
         List<AnswerOption> answerOptions = new ArrayList<>();
         
         subSections.values().forEach(value -> {
-            String text = value.getString("text");
+            String text = value.getString("text", true);
             String nextBranchId = value.getString("link");
             
             AnswerOption answerOption = new AnswerOption(text, nextBranchId);

@@ -1,11 +1,23 @@
-# coonection to MySQL server database
+# Database management
 database:
+
+  # Currently supports next types: [sqlite, my_sql]
+  # It's important to save the spelling from the comment!
+  type: my_sql
+
+  # credential for MySQL database
   host: 127.0.0.1
   port: 3306
   name: database_name
   user: root
   password: password
 
+  # credential for SQLite database
+  file-name: database.db
+
+# This token you can get from https://t.me/BotFather
+# More instructions you can find there:
+# https://core.telegram.org/bots#:~:text=for%20existing%20ones.-,Creating%20a%20new%20bot,in%20contact%20details%20and%20elsewhere
 bot-token: "here-should-be-a-token"
 
 # user cooldown for sending messages 

@@ -26,8 +26,10 @@ public class ExitHandler extends MessageHandler {
         long chatID = update.message().chat().id();
         User user = userProvider.getUser(chatID);
         
+        // removes user from active players and stops all message sendings
         sessionManager.closeSession(user);
         
+        // returns to main menu. Like written in method name
         updateProvider.returnToMainMenu(user);
     }
 

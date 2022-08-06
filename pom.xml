@@ -3,9 +3,9 @@
     <groupId>ru.mrflaxe</groupId>
     <artifactId>TextAdventure</artifactId>
   
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>TextAdventure</name>
-    <description>Telegram bot text game</description>
+    <description>Telegram interractive fiction game</description>
   
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -16,7 +16,7 @@
         <ormlite.version>5.7</ormlite.version>
     </properties>
   
-        <dependencies>
+    <dependencies>
         <dependency>
               <groupId>com.github.pengrad</groupId>
               <artifactId>java-telegram-bot-api</artifactId>
@@ -55,7 +55,13 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.22</version>
+            <version>8.0.30</version>
+        </dependency>
+        <!--  Apache commons text -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.9</version>
         </dependency>
     </dependencies>
   
@@ -85,6 +91,19 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
+                <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>module-info.class</exclude>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>
